@@ -1,0 +1,32 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - echo "Installing system dependencies..."
+  
+  pre_build:
+    commands:
+      - echo "Validating core application files structure..."
+      - test -f index.html || (echo "Critical Error: index.html missing!" && exit 1)
+
+  build:
+    commands:
+      - echo "Packaging application configuration..."
+      - TODAY=$(date +%Y-%m-%d)
+      - echo "Current build date reference target is $TODAY"
+
+  post_build:
+    commands:
+      - echo "Creating dated backup tracking directory in S3..."
+      - zip -r website.zip ./* -x "buildspec.yml" "appspec.yml" "scripts/*"
+      - aws s3 cp website.zip s3://your-pipeline-bucket-name/archive/$TODAY/website.zip
+      - echo "Build execution complete successfully."
+
+artifacts:
+  files:
+    - '**/*'
+  exclude-paths:
+    - 'archive/**/*'
