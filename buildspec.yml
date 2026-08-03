@@ -22,7 +22,7 @@ phases:
     commands:
       - echo "Creating dated backup tracking directory in S3..."
       - zip -r website.zip ./* -x "buildspec.yml" "appspec.yml" "scripts/*"
-      - aws s3 cp website.zip s3://your-pipeline-bucket-name/archive/$TODAY/website.zip
+      - aws s3 cp website.zip s3://codepipeline-us-east-1-8f9af8579556-4737-9fe1-2571adaa37a7/archive/$TODAY/website.zip
       - echo "Build execution complete successfully."
 
 artifacts:
