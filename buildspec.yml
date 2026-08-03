@@ -1,5 +1,10 @@
 version: 0.2
 
+env:
+  variables:
+    # This ensures $TODAY is accessible across build and post_build phases
+    TODAY: "$(date +%Y-%m-%d)"
+
 phases:
   install:
     runtime-versions:
@@ -15,14 +20,13 @@ phases:
   build:
     commands:
       - echo "Packaging application configuration..."
-      - TODAY=$(date +%Y-%m-%d)
       - echo "Current build date reference target is $TODAY"
 
   post_build:
     commands:
       - echo "Creating dated backup tracking directory in S3..."
       - zip -r website.zip ./* -x "buildspec.yml" "appspec.yml" "scripts/*"
-      - aws s3 cp website.zip s3://codepipeline-us-east-1-8f9af8579556-4737-9fe1-2571adaa37a7/archive/$TODAY/website.zip
+      - aws s3 cp website.zip "s3://codepipeline-us-east-1-8f9af8579556-4737-9fe1-2571adaa37a7/archive/$TODAY/website.zip"
       - echo "Build execution complete successfully."
 
 artifacts:
@@ -30,3 +34,4 @@ artifacts:
     - '**/*'
   exclude-paths:
     - 'archive/**/*'
+
