@@ -1,17 +1,15 @@
 version: 0.2
 
-env:
-  variables:
-    # This ensures $TODAY is accessible across build and post_build phases
-    TODAY: "$(date +%Y-%m-%d)"
-
 phases:
   install:
     runtime-versions:
       nodejs: 18
     commands:
       - echo "Installing system dependencies..."
-  
+      # Dynamically calculate the date and append it to the global environment
+      - TODAY=$(date +%Y-%m-%d)
+      - echo "export TODAY=\"$TODAY\"" >> /etc/profile
+
   pre_build:
     commands:
       - echo "Validating core application files structure..."
@@ -34,4 +32,3 @@ artifacts:
     - '**/*'
   exclude-paths:
     - 'archive/**/*'
-
