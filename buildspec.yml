@@ -9,8 +9,8 @@ phases:
   
   pre_build:
     commands:
-      - echo "Validating core application files structure..."
-      - test -f index.html || (echo "Critical Error: index.html missing!" && exit 1)
+       - echo "Validating core application files structure..."
+       - test -f index.html || (echo "Critical Error: index.html missing!" && exit 1)
 
   build:
     commands:
